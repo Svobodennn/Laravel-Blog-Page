@@ -10,9 +10,10 @@
                 <!-- Post preview-->
                 @foreach($articles as $article)
                 <div class="post-preview">
-                    <a href="post.html">
+                    <a href="{{route('single',[$article->getCategory->slug,$article->slug])}}">
                         <h2 class="post-title">{{$article->title}}</h2>
-                        <h3 class="post-subtitle">{{\Illuminate\Support\Str::limit($article->content,80,'    [click to read more...]') }}</h3>
+                        <img src="{{$article->image}}" alt="{{$article->title}}">
+                        <h3 class="post-subtitle">{{\Illuminate\Support\Str::limit($article->content,80,'...    [click to read more]') }}</h3>
                     </a>
                     <p class="post-meta">
                         <a href="#!">{{$article->getCategory->name}}</a>
