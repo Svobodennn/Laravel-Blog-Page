@@ -5,7 +5,7 @@
         </div>
         <div class="list-group">
             @foreach($categories as $category)
-                <a href="" class="list-group-item">{{$category['name']}} <span class="badge bg-primary float-end ">1</span></a>
+                <a href="" class="list-group-item">{{$category['name']}} <span class="badge bg-primary float-end ">{{$category->articleCount()}}</span></a>
 
             @endforeach
         </div>
