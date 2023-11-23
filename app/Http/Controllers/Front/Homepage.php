@@ -6,6 +6,9 @@ use App\Http\Controllers\Controller;
 use Database\Seeders\ArticleSeeder;
 use Illuminate\Http\Request;
 use App\Models\Page;
+use App\Models\Contact;
+use Illuminate\Support\Facades\Validator;
+
 
 // Models
 use App\Models\Category;
@@ -53,8 +56,33 @@ class Homepage extends Controller
         $page=Page::where('slug',$slug)->first() ?? abort(404);
         $data['page'] = $page;
 //        $data['pages'] = Page::orderBy('order','ASC')->get();
-
-
         return view('front.page',$data);
+    }
+
+    public function contact(){
+        return view('front.contact');
+    }
+
+    public function contactPost(Request $request){
+
+        $rules = [
+            'name' => 'required|min:5',
+            'email' => 'required|email',
+            'topic' => 'required',
+            'message' => 'required|min:10'
+        ];
+        $validated = Validator::make($request->post(),$rules);
+
+        if ($validated->errors()){
+            return redirect()->route('contact')->withErrors($validated)->withInput();
+        }
+
+        $contact = new Contact();
+        $contact->name=$request->name;
+        $contact->email=$request->email;
+        $contact->topic=$request->topic;
+        $contact->message=$request->message;
+        $contact->save();
+        return redirect()->route('contact')->with('success','Your message is sent. Thank you.');
     }
 }
