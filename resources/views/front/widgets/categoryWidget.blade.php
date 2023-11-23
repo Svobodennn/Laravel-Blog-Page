@@ -5,7 +5,7 @@
         </div>
         <div class="list-group">
             @foreach($categories as $category)
-                <a href="" class="list-group-item">{{$category['name']}} <span class="badge bg-primary float-end ">{{$category->articleCount()}}</span></a>
+                <a href="{{route('category',$category->slug)}}" class="list-group-item @if(Request::segment(2)==$category->slug) active @endif">{{$category['name']}} <span class="badge @if(Request::segment(2)==$category->slug) bg-info @else bg-primary @endif float-end ">{{$category->articleCount()}}</span></a>
 
             @endforeach
         </div>
