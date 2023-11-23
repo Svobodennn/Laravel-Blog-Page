@@ -18,5 +18,6 @@ use Illuminate\Support\Facades\Route;
 //});
 
 Route::get('/', 'App\Http\Controllers\Front\Homepage@index')->name('homepage');
+Route::get('/articles', 'App\Http\Controllers\Front\Homepage@index');
 Route::get('/category/{category}','App\Http\Controllers\Front\Homepage@category')->name('category');
 Route::get('/{category}/{slug}','App\Http\Controllers\Front\Homepage@single')->name('single');
