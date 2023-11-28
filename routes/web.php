@@ -15,6 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 Route::get('admin/panel', 'App\Http\Controllers\Back\Dashboard@index')->name('dashboard');
 Route::get('admin/login', 'App\Http\Controllers\Back\Auth@login')->name('login');
+Route::post('admin/login', 'App\Http\Controllers\Back\Auth@loginPost')->name('login.post');
+Route::get('admin/logout','App\Http\Controllers\Back\Auth@logout')->name('logout');
 
 
 /*
