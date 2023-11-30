@@ -37,6 +37,7 @@ Route::prefix('admin')->group(function (){
         // all the routes and functions defined for article
         Route::resource('articles',Article::class);
         Route::get('/logout',[Auth::class, 'logout'])->name('logout');
+        Route::get('/switch',[Article::class,'switch'])->name('switch');
 //        Route::get('/panel', '\Dashboard@index')->name('dashboard');
 //        Route::get('/logout', $back . '\Auth@logout')->name('logout');
     });
