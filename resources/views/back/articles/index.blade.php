@@ -35,20 +35,19 @@
                     @foreach($articles as $article)
                     <tr>
                         <td>
-                            <img src="{{$article->image}}" width="150" alt="">
+                            <img src="{{asset($article->image)}}" width="150" alt="">
                         </td>
                         <td>{{$article->title}}</td>
-                        <td>{{$article->category_id}}</td>
+                        <td>{{$article->getCategory->name}}</td>
                         <td>{{$article->hit}}</td>
                         <td>{{$article->created_at}}</td>
                         <td>
-                            @if($article->status == 0)
-                                <span class="badge bg-danger text-light">Passive</span>
-                            @else <span class="badge bg-success text-light">Active</span> @endif
+                            <input class="switch" article-id="{{$article->id}}" type="checkbox" data-on="Active" data-off="Passive" data-onstyle="success" data-offstyle="danger" @if($article->status==1) checked
+                                   @endif data-toggle="toggle">
                         </td>
                         <td>
                                 <a href="" title="View" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></a>
-                                <a href="" title="Edit" class="btn btn-sm btn-warning"><i class="fa fa-pen"></i></a>
+                                <a href="{{route('articles.edit',$article->id)}}" title="Edit" class="btn btn-sm btn-warning"><i class="fa fa-pen"></i></a>
                                 <a href="" title="Delete" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
                         </td>
                     </tr>
@@ -58,4 +57,21 @@
             </div>
         </div>
     </div>
+@endsection
+@section('css')
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+@endsection
+@section('js')
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <script>
+        $(function() {
+            $('.switch').change(function() {
+                id = $(this)[0].getAttribute('article-id');
+                statu=$(this).prop('checked');
+                $.get("{{route('switch')}}", {id:id,statu:statu},  function(data, status) {});
+            })
+        })
+
+
+    </script>
 @endsection
