@@ -71,7 +71,9 @@ class Article extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $article = ArticleModel::findOrFail($id);
+        $categories = CategoryModel::all();
+        return view('back.articles.edit',compact('categories','article'));
     }
 
     /**
@@ -79,7 +81,28 @@ class Article extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            'title' => 'min:3',
+            'image' => 'image|mimes:jpeg,jpg,png|max:2024'
+        ]);
+
+        $article = ArticleModel::findOrFail($id);
+        $article->title=$request->title;
+        $article->category_id=$request->category;
+        $article->content=$request->text;
+        $article->slug= Str::slug($request->title);
+
+        if ($request->hasFile('image')){
+            $imageName = Str::slug($request->title).'.'.$request->image->getClientOriginalExtension(); // get the extension of the image
+            $request->image->move(public_path('uploads'),$imageName); // copy to directory move(directory,imagename) | public_path(directory) -> refers to public directory
+            $article->image='uploads/'.$imageName;
+        }
+
+        $article->save();
+        toastr()->success('Data has been updated successfully!', 'Congrats');
+        return redirect()->route('articles.index');
+
+
     }
 
     /**
@@ -88,5 +111,11 @@ class Article extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function switch(Request $request){
+        $article = ArticleModel::findOrFail($request->id);
+        $article->status=$request->statu ? 1 : 0; // 1 if true, 0 if false
+        $article->save();
     }
 }
