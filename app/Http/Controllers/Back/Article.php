@@ -5,6 +5,9 @@ namespace App\Http\Controllers\Back;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Article as ArticleModel;
+use App\Models\Category as CategoryModel;
+use Illuminate\Support\Str;
+
 
 class Article extends Controller
 {
@@ -22,7 +25,8 @@ class Article extends Controller
      */
     public function create()
     {
-        //
+        $categories = CategoryModel::all();
+        return view('back.articles.create',compact('categories'));
     }
 
     /**
@@ -30,7 +34,28 @@ class Article extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $request->validate([
+           'title' => 'min:3',
+           'image' => 'required|image|mimes:jpeg,jpg,png|max:2024'
+        ]);
+
+        $article = new ArticleModel();
+        $article->title=$request->title;
+        $article->category_id=$request->category;
+        $article->content=$request->text;
+        $article->slug= Str::slug($request->title);
+
+        if ($request->hasFile('image')){
+            $imageName = Str::slug($request->title).'.'.$request->image->getClientOriginalExtension(); // get the extension of the image
+            $request->image->move(public_path('uploads'),$imageName); // copy to directory move(directory,imagename) | public_path(directory) -> refers to public directory
+            $article->image='uploads/'.$imageName;
+        }
+
+        $result = $article->save();
+        toastr()->success('Data has been saved successfully!', 'Congrats');
+        return redirect()->route('articles.index');
+
     }
 
     /**
