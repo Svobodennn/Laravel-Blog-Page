@@ -22,6 +22,7 @@ class Auth extends Controller
             'email' => $request->email,
             'password' => $request->password
         ])) {
+            toastr()->success('Welcome Back '.Authenticate::user()->name);
             return redirect()->route('dashboard');
         }
 
