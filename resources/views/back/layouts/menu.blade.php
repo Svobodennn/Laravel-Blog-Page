@@ -1,3 +1,7 @@
+<?php
+use Illuminate\Support\Facades\Request;
+?>
+
 <body id="page-top">
 
 <!-- Page Wrapper -->
@@ -33,17 +37,17 @@
         </div>
 
         <!-- Nav Item - Pages Collapse Menu -->
-        <li class="nav-item @if(\Illuminate\Support\Facades\Request::segment(2)=='articles') active @endif">
-            <a class="nav-link @if(\Illuminate\Support\Facades\Request::segment(2)=='articles') in @else collapsed @endif" href="#" data-toggle="collapse" data-target="#collapseTwo"
+        <li class="nav-item @if(Request::segment(2)=='articles') active @endif">
+            <a class="nav-link @if(Request::segment(2)=='articles') in @else collapsed @endif" href="#" data-toggle="collapse" data-target="#collapseTwo"
                aria-expanded="true" aria-controls="collapseTwo">
                 <i class="fas fa-fw fa-cog"></i>
                 <span>Articles</span>
             </a>
-            <div id="collapseTwo" class="collapse @if(\Illuminate\Support\Facades\Request::segment(2)=='articles') show @endif" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+            <div id="collapseTwo" class="collapse @if(Request::segment(2)=='articles') show @endif" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
                     <h6 class="collapse-header">Article Operations</h6>
-                    <a class="collapse-item" href="">All Articles</a>
-                    <a class="collapse-item" href="cards.html">Create Article</a>
+                    <a class="collapse-item @if(Request::segment(2)=='articles' and !Request::segment(3)) active @endif" href="{{route('articles.index')}}">All Articles</a>
+                    <a class="collapse-item @if(Request::segment(2)=='articles' and Request::segment(3) == 'create') active @endif" href="{{route('articles.create')}}">Create Article</a>
                 </div>
             </div>
         </li>
