@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Back\Auth;
 use App\Http\Controllers\Back\Dashboard;
 use App\Http\Controllers\Front\Homepage;
+use App\Http\Controllers\Back\Article;
 
 
 //Route::get('/', function () {
@@ -20,6 +21,7 @@ use App\Http\Controllers\Front\Homepage;
 
 Route::prefix('admin')->group(function (){
 //    $back = "App\Http\Controllers\Back";
+    // redirect to dashboard if user is logged in
     Route::middleware(['isLogin'])->group(function (){
 //        global $back;
         Route::get('/login',[Auth::class,'login'])->name('login');
@@ -30,7 +32,10 @@ Route::prefix('admin')->group(function (){
 
     Route::middleware(['isAdmin'])->group(function (){
 //        global $back;
+        // redirect to login page if user didn't log in
         Route::get('/panel', [Dashboard::class, 'index'])->name('dashboard');
+        // all the routes and functions defined for article
+        Route::resource('articles',Article::class);
         Route::get('/logout',[Auth::class, 'logout'])->name('logout');
 //        Route::get('/panel', '\Dashboard@index')->name('dashboard');
 //        Route::get('/logout', $back . '\Auth@logout')->name('logout');
