@@ -7,7 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Article as ArticleModel;
 use App\Models\Category as CategoryModel;
 use Illuminate\Support\Str;
-
+use Illuminate\Support\Facades\File;
 
 class Article extends Controller
 {
@@ -16,7 +16,7 @@ class Article extends Controller
      */
     public function index()
     {
-        $articles = ArticleModel::orderBy('created_at','asc')->get();
+        $articles = ArticleModel::with('getCategory')->orderBy('created_at','asc')->get();
         return view('back.articles.index',compact('articles'));
     }
 
@@ -111,6 +111,39 @@ class Article extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+    public function delete(string $id)
+    {
+        ArticleModel::find($id)->delete();
+        toastr()->success('Article has archived.');
+        return redirect()->route('articles.index');
+    }
+    public function hardDelete(string $id)
+    {
+        $article = ArticleModel::onlyTrashed()->find($id);
+
+        if(File::exists($article->image)){
+            File::delete(public_path($article->image));
+        }
+
+        $article->forceDelete();
+
+        toastr()->success('Article has deleted.');
+        return redirect()->route('articles.index');
+    }
+
+    public function trashed()
+    {
+        $articles = ArticleModel::onlyTrashed()->orderBy('deleted_at','DESC')->get();
+        return view('back.articles.trashed',compact('articles'));
+    }
+
+    public function recover($id)
+    {
+        $article = ArticleModel::onlyTrashed()->find($id)->restore();
+        toastr()->success('Article has restored.');
+        return redirect()->back();
     }
 
     public function switch(Request $request){
