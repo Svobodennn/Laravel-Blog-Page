@@ -34,10 +34,16 @@ Route::prefix('admin')->group(function (){
 //        global $back;
         // redirect to login page if user didn't log in
         Route::get('/panel', [Dashboard::class, 'index'])->name('dashboard');
+
         // all the routes and functions defined for article
+        Route::get('articles/trashed',[Article::class, 'trashed'])->name('trashed.articles');
+        Route::get('articles/trashed/{id}',[Article::class, 'recover'])->name('recover.article');
         Route::resource('articles',Article::class);
+
         Route::get('/logout',[Auth::class, 'logout'])->name('logout');
         Route::get('/switch',[Article::class,'switch'])->name('switch');
+        Route::get('/deletearticle/{id}',[Article::class, 'delete'])->name('delete.article');
+        Route::get('/harddeletearticle/{id}',[Article::class, 'hardDelete'])->name('hard.delete.article');
 //        Route::get('/panel', '\Dashboard@index')->name('dashboard');
 //        Route::get('/logout', $back . '\Auth@logout')->name('logout');
     });
