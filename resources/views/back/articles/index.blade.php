@@ -5,6 +5,7 @@
         <div class="card-header py-3">
             <h6 class="m-0 font-weight-bold text-primary">@yield('title')
             <span class="m-0 font-weight-bold text-primary float-right"> <strong>{{$articles->count()}}</strong> Articles found</span></h6>
+            <a href="{{route('trashed.articles')}}" class="btn btn-warning btn-sm float-right"> <i class="fa fa-trash"></i> Deleted Articles</a>
         </div>
         <div class="card-body">
             <div class="table-responsive">
@@ -46,9 +47,10 @@
                                    @endif data-toggle="toggle">
                         </td>
                         <td>
-                                <a href="" title="View" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></a>
+                                <a target="_blank" href="{{route('single',[$article->getCategory->slug,$article->slug])}}" title="View" class="btn btn-sm btn-success"><i class="fa fa-eye"></i></a>
                                 <a href="{{route('articles.edit',$article->id)}}" title="Edit" class="btn btn-sm btn-warning"><i class="fa fa-pen"></i></a>
-                                <a href="" title="Delete" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i></a>
+
+                                <a href="{{route('delete.article',$article->id)}}" title="Archive" class="btn btn-sm btn-danger"><i class="fa fa-archive"></i></a>
                         </td>
                     </tr>
                     @endforeach
