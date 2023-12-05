@@ -51,25 +51,23 @@ use Illuminate\Support\Facades\Request;
                 </div>
             </div>
         </li>
-
-        <!-- Nav Item - Utilities Collapse Menu -->
-        <li class="nav-item">
-            <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-               aria-expanded="true" aria-controls="collapseUtilities">
-                <i class="fas fa-fw fa-wrench"></i>
-                <span>Utilities</span>
+        <li class="nav-item @if(Request::segment(2)=='categories') active @endif">
+            <a class="nav-link @if(Request::segment(2)=='categories') in @else collapsed @endif" href="#" data-toggle="collapse" data-target="#collapseTwo"
+               aria-expanded="true" aria-controls="collapseTwo">
+                <i class="fas fa-fw fa-list"></i>
+                <span>Categories</span>
             </a>
-            <div id="collapseUtilities" class="collapse" aria-labelledby="headingUtilities"
-                 data-parent="#accordionSidebar">
+            <div id="collapseTwo" class="collapse @if(Request::segment(2)=='categories') show @endif" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
                 <div class="bg-white py-2 collapse-inner rounded">
-                    <h6 class="collapse-header">Custom Utilities:</h6>
-                    <a class="collapse-item" href="utilities-color.html">Colors</a>
-                    <a class="collapse-item" href="utilities-border.html">Borders</a>
-                    <a class="collapse-item" href="utilities-animation.html">Animations</a>
-                    <a class="collapse-item" href="utilities-other.html">Other</a>
+                    <h6 class="collapse-header">Category Operations</h6>
+                    <a class="collapse-item @if(Request::segment(2)=='categories' and !Request::segment(3)) active @endif" href="{{route('categories.index')}}">All Categories</a>
+                    <a class="collapse-item @if(Request::segment(2)=='categories' and Request::segment(3) == 'create') active @endif" href="{{route('categories.create')}}">Create Category</a>
                 </div>
             </div>
         </li>
+
+        <!-- Nav Item - Utilities Collapse Menu -->
+
 
         <!-- Divider -->
         <hr class="sidebar-divider">
