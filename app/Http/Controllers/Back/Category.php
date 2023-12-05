@@ -33,6 +33,10 @@ class Category extends Controller
         $category->status=$request->statu ? 1 : 0; // 1 if true, 0 if false
         $category->save();
     }
+    public function getData(Request $request){
+        $category = CategoryModel::findOrFail($request->id);
+        return response()->json($category);
+    }
 
     public function delete(string $id)
     {
@@ -74,23 +78,40 @@ class Category extends Controller
         $category->slug = Str::slug($request->name);
 
         $result = $category->save();
-        toastr()->success('Data has been saved successfully!', 'Congrats');
+        toastr()->success('Category has been created successfully!', 'Congrats');
         return redirect()->route('categories.index');
 
     }
 
-    public function update(Request $request, string $id)
+
+    public function update(Request $request)
     {
+
         $request->validate([
             'name' => 'min:3',
+            'slug'=> 'min:3'
         ]);
 
-        $category = CategoryModel::findOrFail($id);
-        $category->name=$request->name;
-        $category->slug=Str::slug($request->name);
+        $nameExists = CategoryModel::where('name', $request->name)
+            ->where('id', '!=', $request->id)
+            ->first();
 
+        $slugExists = CategoryModel::where('slug', Str::slug($request->slug))
+            ->where('id', '!=', $request->id)
+            ->first();
+
+        if ($nameExists || $slugExists){
+
+            toastr()->error($request->name. ' category already exists.');
+            return redirect()->back();
+        }
+
+
+        $category = CategoryModel::findOrFail($request->id);
+        $category->name=$request->name;
+        $category->slug=Str::slug($request->slug);
         $category->save();
-        toastr()->success('Data has been updated successfully!', 'Congrats');
+        toastr()->success('Category has been updated successfully!', 'Congrats');
         return redirect()->route('categories.index');
     }
 
