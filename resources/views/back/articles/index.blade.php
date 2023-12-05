@@ -70,7 +70,7 @@
             $('.switch').change(function() {
                 id = $(this)[0].getAttribute('article-id');
                 statu=$(this).prop('checked');
-                $.get("{{route('switch')}}", {id:id,statu:statu},  function(data, status) {});
+                $.get("{{route('switch.article')}}", {id:id,statu:statu},  function(data, status) {});
             })
         })
 
