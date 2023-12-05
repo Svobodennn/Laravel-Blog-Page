@@ -45,8 +45,9 @@
                             <td>
                                 <a category-id="{{$category->id}}" title="Edit"
                                    class="btn btn-sm btn-warning edit-click"><i class="fa fa-pen"></i></a>
-                                <a href="{{route('delete.category',$category->id)}}" title="Archive"
-                                   class="btn btn-sm btn-danger"><i class="fa fa-archive"></i></a>
+                                <a category-id="{{$category->id}}" article-count="{{$category->articleCount()}}"
+                                   title="Archive"
+                                   class="btn btn-sm btn-danger archive-click"><i class="fa fa-archive"></i></a>
                             </td>
                         </tr>
                     @endforeach
@@ -57,7 +58,7 @@
     </div>
 
     <div class="modal" id="editModal" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title">Edit Category</h5>
@@ -70,17 +71,45 @@
                             <label for="name">Category Name</label>
                             <input id="name" name="name" class="form-control" placeholder="Category Name..."
                                    type="text">
-                            <input type="hidden" name="id" id="id">
+                            <input type="hidden" name="id" id="idEdit">
                         </div>
                         <div class="form-group">
                             <label for="slug">Category Slug</label>
                             <input id="slug" name="slug" class="form-control" placeholder="Category Name..."
                                    type="text">
                         </div>
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button id="submit" type="submit" class="btn btn-primary">Save changes</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button id="submit" type="submit" class="btn btn-primary">Save changes</button>
 
-                </form>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal" id="archiveModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Are you sure you want to archive this category?</h5>
+                </div>
+                <div id="archiveBody" class="modal-body">
+                    <div id="articleAlert" class="alert alert-danger">
+
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <form id="archiveForm" method="get">
+                        @csrf
+                        <div class="form-group">
+                            <input type="hidden" name="idArchive" id="idArchive">
+                            <button type="submit" name="heloheleley" id="submitButton" class="btn btn-danger" data-dismiss="modal">
+                                Archive
+                            </button>
+                        </div>
+                    </form>
+
                 </div>
             </div>
         </div>
@@ -96,6 +125,7 @@
         $(function () {
 
             $('.edit-click').click(function () {
+
                 id = $(this)[0].getAttribute('category-id');
 
                 $.ajax({
@@ -103,10 +133,9 @@
                     url: '{{route('category.getData')}}',
                     data: {id: id},
                     success: function (data) {
-                        console.log(data)
                         $('#name').val(data.name)
                         $('#slug').val(data.slug)
-                        $('#id').val(data.id)
+                        $('#idEdit').val(data.id)
 
                         var formAction = '{{ route('categories.update', ['category' => '__ID__']) }}';
                         formAction = formAction.replace('__ID__', data.id);
@@ -118,7 +147,37 @@
                     }
                 })
             })
+            $('.archive-click').click(function () {
 
+                id = $(this)[0].getAttribute('category-id');
+
+                articleCount = $(this)[0].getAttribute('article-count');
+
+                $('#articleAlert').html('')
+                $('#archiveBody').hide()
+                if (articleCount > 0) {
+                    $('#articleAlert').html('This category has ' + articleCount + ' articles. Are you sure you want to archive?')
+                    $('#archiveBody').show()
+                }
+
+                $('#idArchive').val(id)
+
+                var formAction = '{{ route('delete.category', ['id' => '__ID__']) }}';
+                formAction = formAction.replace('__ID__', id);
+                $('form').attr('action', formAction);
+
+                $('#archiveModal').modal();
+
+
+            })
+
+
+            $('#submitButton').click(function (event) {
+                console.log('Script is running...');
+
+                event.preventDefault(); // Prevent the default form submission
+                $('#archiveForm').submit(); // Submit the form
+            });
 
 
             $('.switch').change(function () {
