@@ -45,6 +45,7 @@ Route::prefix('admin')->group(function (){
         // all the routes and functions defined for category
         Route::get('categories/trashed',[Category::class, 'trashed'])->name('trashed.categories');
         Route::get('categories/trashed/{id}',[Category::class, 'recover'])->name('recover.category');
+        Route::get('categories/getData',[Category::class,'getData'])->name('category.getData');
         Route::resource('categories',Category::class);
 
         Route::get('/logout',[Auth::class, 'logout'])->name('logout');
