@@ -186,6 +186,30 @@
                 $.get("{{route('switch.category')}}", {id: id, statu: statu}, function (data, status) {
                 });
             })
+
+            $('#name').on('input', function() {
+                var title = $(this).val().trim().toLowerCase();
+
+                // Turkish character mapping
+                var turkishCharacters = {
+                    'ç': 'c',
+                    'ğ': 'g',
+                    'ı': 'i',
+                    'ö': 'o',
+                    'ş': 's',
+                    'ü': 'u'
+                };
+
+                // Replace Turkish characters
+                title = title.replace(/[çğıöşü]/g, function(match) {
+                    return turkishCharacters[match];
+                });
+
+                // Replace non-alphanumeric characters
+                var slug = title.replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+
+                $('#slug').val(slug);
+            });
         })
 
 
