@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Category as CategoryModel;
 use Illuminate\Support\Str;
+use App\Models\Article;
 
 class Category extends Controller
 {
@@ -40,7 +41,23 @@ class Category extends Controller
 
     public function delete(string $id)
     {
-        CategoryModel::find($id)->delete();
+
+
+        $category = CategoryModel::find($id);
+
+        if ($category->id == 1) {
+            toastr()->error('General category can not be archived');
+            return redirect()->route('categories.index');
+        }
+
+        $count = $category->articleCount();
+        if ($category->articleCount()>0){
+            Article::where('category_id',$category->id)->update(['category_id'=>1]);
+            $defaultCategory = $category->find(1)->name;
+            toastr()->success($count.' Articles belonging this category moved to '.$defaultCategory.' category.');
+        }
+
+        $category->delete();
         toastr()->success('Category has archived.');
         return redirect()->route('categories.index');
     }
