@@ -155,8 +155,15 @@
 
                 $('#articleAlert').html('')
                 $('#archiveBody').hide()
+
                 if (articleCount > 0) {
                     $('#articleAlert').html('This category has ' + articleCount + ' articles. Are you sure you want to archive?')
+                    $('#archiveBody').show()
+                }
+
+                if (id == 1) {
+                    $('#articleAlert').html('General category can not be archived.')
+                    $('#submitButton').hide()
                     $('#archiveBody').show()
                 }
 
