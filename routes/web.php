@@ -6,6 +6,7 @@ use App\Http\Controllers\Back\Dashboard;
 use App\Http\Controllers\Front\Homepage;
 use App\Http\Controllers\Back\Article;
 use App\Http\Controllers\Back\Category;
+use App\Http\Controllers\Back\Page;
 
 
 //Route::get('/', function () {
@@ -48,13 +49,26 @@ Route::prefix('admin')->group(function (){
         Route::get('categories/getData',[Category::class,'getData'])->name('category.getData');
         Route::resource('categories',Category::class);
 
+        // all the routes and functions defined for pages
+        Route::get('pages/trashed',[Page::class, 'trashed'])->name('trashed.pages');
+        Route::get('pages/trashed/{id}',[Page::class, 'recover'])->name('recover.page');
+        Route::resource('pages',Page::class);
+
+
         Route::get('/logout',[Auth::class, 'logout'])->name('logout');
+
         Route::get('/switcharticle',[Article::class,'switch'])->name('switch.article');
         Route::get('/switchcategory',[Category::class,'switch'])->name('switch.category');
+        Route::get('/switchpage',[Page::class,'switch'])->name('switch.page');
+
         Route::get('/deletearticle/{id}',[Article::class, 'delete'])->name('delete.article');
         Route::get('/harddeletearticle/{id}',[Article::class, 'hardDelete'])->name('hard.delete.article');
+
         Route::get('/deletecategory/{id}',[Category::class, 'delete'])->name('delete.category');
         Route::get('/harddeletecategory/{id}',[Category::class, 'hardDelete'])->name('hard.delete.category');
+
+        Route::get('/deletepage/{id}',[Page::class, 'delete'])->name('delete.page');
+        Route::get('/harddeletepage/{id}',[Page::class, 'hardDelete'])->name('hard.delete.page');
 //        Route::get('/panel', '\Dashboard@index')->name('dashboard');
 //        Route::get('/logout', $back . '\Auth@logout')->name('logout');
     });
